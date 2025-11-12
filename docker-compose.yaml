@@ -17,10 +17,9 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
     labels:
-      - traefik.enable=true
+      - "traefik.enable=true"
       - "traefik.http.routers.n8n.rule=Host(`${N8N_DOMAIN_NAME}`)"
-      - traefik.http.routers.n8n.entrypoints.0=websecure
-      - traefik.http.routers.n8n.entrypoints.1=web
+      - "traefik.http.routers.n8n.entrypoints=websecure,web"
       # - traefik.http.services.n8n.loadbalancer.servers.0.url=http://localhost:5678
     expose:
       - 5678

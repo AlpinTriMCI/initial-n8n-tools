@@ -35,7 +35,8 @@ if [ ! -d "$COMPOSE_DIR/.git" ]; then
   git clone https://github.com/AlpinTriMCI/initial-n8n-tools.git "$COMPOSE_DIR"
 fi
 
-N8N_DOMAIN_NAME=$(hostname)
+HOSTNAME=$(hostname)
+N8N_DOMAIN_NAME="${HOSTNAME}.sandboxwork.my.id"
 echo "🌐 Using domain: $N8N_DOMAIN_NAME"
 
 # Create .env file for docker compose
