@@ -7,7 +7,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -20,7 +19,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.n8n.rule=Host(`${N8N_DOMAIN_NAME}`)"
-      - "traefik.http.routers.n8n.entrypoints=websecure"
+      - "traefik.http.routers.n8n.entrypoints=websecure,web"
       - "traefik.http.routers.n8n.tls.certResolver=letsencrypt"
       # - traefik.http.services.n8n.loadbalancer.servers.0.url=http://localhost:5678
     expose:

@@ -1,9 +1,21 @@
 #cloud-config
 # run command 
 runcmd:
-  - echo "Start install script"
+  - echo ">>> Start install script"
   - apt update
-  - apt install -y git
+  - apt install -y git curl
+
+  # Clone repo installer
   - git clone https://github.com/AlpinTriMCI/initial-n8n-tools.git /opt/setup
   - bash /opt/setup/install.sh
-  - echo "Install script finished"
+
+  # Cleanup repository & script
+  - rm -rf /opt/setup/.git
+  - rm -f /opt/setup/install.sh
+
+  # Cleanup cache
+  - apt clean
+  - rm -rf /var/lib/apt/lists/*
+  - cloud-init clean --logs --seed
+
+  - echo ">>> Install script finished"
