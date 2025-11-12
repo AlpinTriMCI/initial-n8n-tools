@@ -1,0 +1,16 @@
+#cloud-config
+
+# update & upgrade package
+package_update: true
+package_upgrade: true
+
+# install required packages
+packages:
+  - git
+
+# run command 
+runcmd:
+  - echo "🚀 Start install script"
+  - git clone https://github.com/AlpinTriMCI/initial-n8n-tools.git /opt/setup
+  - bash /opt/setup/install.sh
+  - echo "✅ Install script finished"
