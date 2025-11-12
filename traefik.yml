@@ -8,10 +8,10 @@ entryPoints:
   websecure:
     address: :443
 
-certificatesResolvers:
-  letsencrypt:
-    acme:
-      email: support@mediacloud.id
-      storage: /etc/traefik/letsencrypt/acme.json
-      httpChallenge:
-        entryPoint: web
+# certificatesResolvers:
+#   letsencrypt:
+#     acme:
+#       email: support@mediacloud.id
+#       storage: /etc/traefik/letsencrypt/acme.json
+#       httpChallenge:
+#         entryPoint: web
