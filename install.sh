@@ -6,7 +6,7 @@ echo "🚀 Start setup n8n environment"
 
 # Add Docker's official GPG key:
 sudo apt-get update
-sudo apt-get install ca-certificates curl
+sudo apt-get install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -19,7 +19,7 @@ echo \
 sudo apt-get update
 
 # Install docker packages
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Start docker
 sudo systemctl enable docker
@@ -39,7 +39,7 @@ N8N_DOMAIN_NAME=$(hostname)
 echo "🌐 Using domain: $N8N_DOMAIN_NAME"
 
 # Create .env file for docker compose
-echo "N8N_DOMAIN_NAME=${N8N_DOMAIN_NAME}" > "$COMPOSE_DIR/.env"
+echo "N8N_DOMAIN_NAME=${N8N_DOMAIN_NAME}" | sudo tee "$COMPOSE_DIR/.env" > /dev/null
 
 # Run docker compose
 cd "$COMPOSE_DIR"
