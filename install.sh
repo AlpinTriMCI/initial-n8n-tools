@@ -44,7 +44,7 @@ echo "N8N_DOMAIN_NAME=${N8N_DOMAIN_NAME}" | sudo tee "$COMPOSE_DIR/.env" > /dev/
 # Run docker compose
 cd "$COMPOSE_DIR"
 echo "🚢 Starting containers..."
-docker compose up -d
+sudo docker compose up -d
 
 # Running complete
 echo "✅ Docker and Compose setup complete!"
