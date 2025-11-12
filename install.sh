@@ -2,7 +2,7 @@
 
 set -e
 
-echo "🚀 Start setup n8n environment"
+echo "Start setup n8n environment"
 
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -19,11 +19,17 @@ echo \
 sudo apt-get update
 
 # Install docker packages
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install -y docker-ce=5:28.5.2-1~ubuntu.22.04~jammy docker-ce-cli=5:28.5.2-1~ubuntu.22.04~jammy containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-mark hold docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Start docker
 sudo systemctl enable docker
 sudo systemctl start docker
+
+# Create directory for traefik let's encrypt
+sudo mkdir -p /etc/traefik/letsencrypt
+sudo touch /etc/traefik/letsencrypt/acme.json
+sudo chmod 600 /etc/traefik/letsencrypt/acme.json
 
 # Setup compose
 COMPOSE_DIR="/opt/setup"
@@ -31,21 +37,21 @@ mkdir -p "$COMPOSE_DIR"
 
 # Clone compose if repo doesn't exist
 if [ ! -d "$COMPOSE_DIR/.git" ]; then
-  echo "📦 Cloning compose repo..."
+  echo "Cloning compose repo..."
   git clone https://github.com/AlpinTriMCI/initial-n8n-tools.git "$COMPOSE_DIR"
 fi
 
 HOSTNAME=$(hostname)
 N8N_DOMAIN_NAME="${HOSTNAME}.sandboxwork.my.id"
-echo "🌐 Using domain: $N8N_DOMAIN_NAME"
+echo "Using domain: $N8N_DOMAIN_NAME"
 
 # Create .env file for docker compose
 echo "N8N_DOMAIN_NAME=${N8N_DOMAIN_NAME}" | sudo tee "$COMPOSE_DIR/.env" > /dev/null
 
 # Run docker compose
 cd "$COMPOSE_DIR"
-echo "🚢 Starting containers..."
+echo "Starting containers..."
 sudo docker compose up -d
 
 # Running complete
-echo "✅ Docker and Compose setup complete!"
+echo "Docker and Compose setup complete!"
