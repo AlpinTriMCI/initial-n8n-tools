@@ -80,3 +80,5 @@ send_progress "build_compose" "success" # ONLY FOR TEST
 
 # Running complete
 echo "Docker and Compose setup complete!"
+
+send_progress "setup" "success" # ONLY FOR TEST

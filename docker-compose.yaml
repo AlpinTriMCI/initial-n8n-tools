@@ -14,13 +14,15 @@ services:
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: unless-stopped
+    ports:
+      - 5678:5678
     volumes:
       - n8n_data:/home/node/.n8n
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.n8n.rule=Host(`${N8N_DOMAIN_NAME}`)"
       - "traefik.http.routers.n8n.entrypoints=websecure,web"
-      # - "traefik.http.routers.n8n.tls.certResolver=letsencrypt"
+      - "traefik.http.routers.n8n.tls.certResolver=letsencrypt"
     expose:
       - 5678
     networks:
