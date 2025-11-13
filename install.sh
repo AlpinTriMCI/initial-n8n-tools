@@ -63,7 +63,7 @@ else
 fi
 
 HOSTNAME=$(hostname)
-N8N_DOMAIN_NAME="${HOSTNAME}.sandboxwork.my.id" # Set subdomain here
+N8N_DOMAIN_NAME="n8n.${HOSTNAME}.sandboxwork.my.id" # Set subdomain here
 echo "Using domain: $N8N_DOMAIN_NAME"
 
 # Create .env file for docker compose

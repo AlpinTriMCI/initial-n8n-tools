@@ -1,4 +1,8 @@
 #cloud-config
+# Disable upgrade
+package_update: true
+package_upgrade: false
+
 # run command 
 runcmd:
   - echo ">>> Start install script"

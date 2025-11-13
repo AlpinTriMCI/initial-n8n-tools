@@ -14,6 +14,9 @@ services:
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: unless-stopped
+    # environment:
+    #   - N8N_HOST=${N8N_DOMAIN_NAME}
+    #   - N8N_PROTOCOL=https
     ports:
       - 5678:5678
     volumes:
@@ -21,7 +24,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.n8n.rule=Host(`${N8N_DOMAIN_NAME}`)"
-      - "traefik.http.routers.n8n.entrypoints=websecure,web"
+      - "traefik.http.routers.n8n.entrypoints=web,websecure"
+      - "traefik.http.routers.n8n.tls=true"
       - "traefik.http.routers.n8n.tls.certResolver=letsencrypt"
     expose:
       - 5678

@@ -10,7 +10,6 @@ entryPoints:
         entryPoint:
           to: websecure
           scheme: https
-          permanent: true
   websecure:
     address: :443
 
@@ -19,5 +18,4 @@ certificatesResolvers:
     acme:
       email: support@mediacloud.id
       storage: /etc/traefik/letsencrypt/acme.json
-      httpChallenge:
-        entryPoint: web
+      tlsChallenge: {}
