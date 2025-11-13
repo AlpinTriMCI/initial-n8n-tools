@@ -10,13 +10,17 @@ services:
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/traefik/letsencrypt:/etc/traefik/letsencrypt
+      # - /etc/traefik/letsencrypt:/etc/traefik/letsencrypt
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: unless-stopped
-    # environment:
-    #   - N8N_HOST=${N8N_DOMAIN_NAME}
-    #   - N8N_PROTOCOL=https
+    environment:
+      - N8N_HOST=${N8N_DOMAIN_NAME}
+      - N8N_PROTOCOL=https
+      - N8N_PORT=5678
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://${N8N_DOMAIN_NAME}/
+      - N8N_PROXY_HOPS=1
     ports:
       - 5678:5678
     volumes:
