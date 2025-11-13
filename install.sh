@@ -1,23 +1,30 @@
 #!/bin/bash
 
-# ONLY FOR TEST
-WEBHOOK_URL="https://api.devstech.web.id/webhooks"
 HOSTNAME=$(hostname)
+DOMAIN="${HOSTNAME}.sandboxwork.my.id" # Set domain here
+WEBHOOK_URL="https://api.devstech.web.id/webhooks"
+
+# Helper send progress
 send_progress() {
   local step="$1"
   local status="$2"
+  local message="${3:-}"
+  local timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+  # send json webhook
   curl -s -X POST "$WEBHOOK_URL" \
     -H "Content-Type: application/json" \
-    -d "{\"hostname\":\"$HOSTNAME\",\"step\":\"$step\",\"status\":\"$status\"}" >/dev/null 2>&1
+    -d "{\"hostname\":\"$HOSTNAME\",\"step\":\"$step\",\"status\":\"$status\",\"message\":\"$message\",\"timestamp\":\"$timestamp\"}" >/dev/null 2>&1
 }
+
+trap 'send_progress "setup" "failed" "Error occurred at line $LINENO: $(sed -n ${LINENO}p $0 | sed "s/\"/\\\"/g")"' ERR
 
 set -e
 
-send_progress "setup" "running" # ONLY FOR TEST
+send_progress "setup" "running"
 
-echo "Start setup n8n environment"
+send_progress "install_docker" "running"
 
-send_progress "instal_docker" "running" # ONLY FOR TEST
 # Add Docker's official GPG key:
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl
@@ -41,12 +48,7 @@ sudo apt-mark hold docker-ce docker-ce-cli containerd.io docker-buildx-plugin do
 sudo systemctl enable docker
 sudo systemctl start docker
 
-send_progress "instal_docker" "success" # ONLY FOR TEST
-
-# Create directory for traefik let's encrypt
-# sudo mkdir -p /etc/traefik/letsencrypt
-# sudo touch /etc/traefik/letsencrypt/acme.json
-# sudo chmod 600 /etc/traefik/letsencrypt/acme.json
+send_progress "install_docker" "success"
 
 # Setup compose
 COMPOSE_DIR="/opt/setup"
@@ -54,31 +56,37 @@ mkdir -p "$COMPOSE_DIR"
 
 # Clone compose if repo doesn't exist
 if [ -d "$COMPOSE_DIR/.git" ]; then
-  echo "Repo exists, pulling latest changes..."
   cd "$COMPOSE_DIR"
   git pull
 else
-  echo "Cloning compose repo..."
   git clone https://github.com/AlpinTriMCI/initial-n8n-tools.git "$COMPOSE_DIR" # Set git url
 fi
 
-HOSTNAME=$(hostname)
-N8N_DOMAIN_NAME="n8n.${HOSTNAME}.sandboxwork.my.id" # Set subdomain here
-echo "Using domain: $N8N_DOMAIN_NAME"
-
 # Create .env file for docker compose
-echo "N8N_DOMAIN_NAME=${N8N_DOMAIN_NAME}" | sudo tee "$COMPOSE_DIR/.env" > /dev/null
+cat <<EOF > .env
+# DOMAIN_NAME and SUBDOMAIN together determine where n8n will be reachable from
+# The top level domain to serve from
+DOMAIN_NAME=${DOMAIN}
 
-send_progress "build_compose" "running" # ONLY FOR TEST
+# The subdomain to serve from
+SUBDOMAIN=n8n
+
+# The above example serve n8n at: https://n8n.example.com
+
+# Optional timezone to set which gets used by Cron and other scheduling nodes
+# New York is the default value if not set
+# GENERIC_TIMEZONE=Europe/Berlin
+
+# The email address to use for the TLS/SSL certificate creation
+SSL_EMAIL=user@${DOMAIN}
+EOF
 
 # Run docker compose
+send_progress "build_compose" "running"
+
 cd "$COMPOSE_DIR"
-echo "Starting containers..."
 sudo docker compose up -d
 
-send_progress "build_compose" "success" # ONLY FOR TEST
+send_progress "build_compose" "success"
 
-# Running complete
-echo "Docker and Compose setup complete!"
-
-send_progress "setup" "success" # ONLY FOR TEST
+send_progress "setup" "done" "Installation complete without errors"
