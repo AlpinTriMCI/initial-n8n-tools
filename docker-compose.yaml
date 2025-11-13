@@ -10,7 +10,7 @@ services:
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      # - /etc/traefik/letsencrypt:/etc/traefik/letsencrypt
+      - /etc/traefik_data:/letsencrypt
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: unless-stopped
