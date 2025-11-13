@@ -10,7 +10,7 @@ services:
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/traefik_data:/letsencrypt
+      - traefik_data:/letsencrypt
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.n8n.rule=Host(`${N8N_DOMAIN_NAME}`)"
-      - "traefik.http.routers.n8n.entrypoints=web,websecure"
+      - "traefik.http.routers.n8n.entrypoints=websecure"
       - "traefik.http.routers.n8n.tls=true"
       - "traefik.http.routers.n8n.tls.certResolver=letsencrypt"
     expose:
@@ -44,3 +44,4 @@ networks:
     
 volumes:
   n8n_data: 
+  traefik_data: 
