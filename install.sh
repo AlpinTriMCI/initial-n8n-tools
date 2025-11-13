@@ -44,9 +44,9 @@ sudo systemctl start docker
 send_progress "instal_docker" "success" # ONLY FOR TEST
 
 # Create directory for traefik let's encrypt
-sudo mkdir -p /etc/traefik/letsencrypt
-sudo touch /etc/traefik/letsencrypt/acme.json
-sudo chmod 600 /etc/traefik/letsencrypt/acme.json
+# sudo mkdir -p /etc/traefik/letsencrypt
+# sudo touch /etc/traefik/letsencrypt/acme.json
+# sudo chmod 600 /etc/traefik/letsencrypt/acme.json
 
 # Setup compose
 COMPOSE_DIR="/opt/setup"

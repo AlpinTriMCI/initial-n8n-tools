@@ -18,4 +18,6 @@ certificatesResolvers:
     acme:
       email: support@mediacloud.id
       storage: /etc/traefik/letsencrypt/acme.json
-      tlsChallenge: {}
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      httpChallenge:
+        entryPoint: web
