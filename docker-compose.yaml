@@ -3,14 +3,18 @@ services:
     image: "traefik"
     restart: always
     command:
+      - "--api=true"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
+      - "--certificatesresolvers.mytlschallenge.acme.tlschallenge.delay=30"
+      # - "--certificatesresolvers.mytlschallenge.acme.httpchallenge=true"
+      # - "--certificatesresolvers.mytlschallenge.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.mytlschallenge.acme.email=${SSL_EMAIL}"
       - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.mytlschallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
@@ -49,10 +53,10 @@ services:
       - NODE_ENV=production
       - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
-      - TZ=${GENERIC_TIMEZONE}
+      - N8N_PROXY_HOPS=1
     volumes:
       - n8n_data:/home/node/.n8n
-      - ./local-files:/files
+      - /local-files:/files
 
 volumes:
   n8n_data:
