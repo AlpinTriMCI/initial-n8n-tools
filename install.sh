@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOSTNAME=$(hostname)
-DOMAIN="${HOSTNAME}.sandboxwork.my.id" # Set domain here
+DOMAIN="${HOSTNAME}.alpintripranjadata.my.id" # Set domain here
 WEBHOOK_URL="https://api.devstech.web.id/webhooks"
 
 # Helper send progress
