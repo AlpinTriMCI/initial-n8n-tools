@@ -1,10 +1,10 @@
 #!/bin/bash
 
 HOSTNAME=$(hostname)
-# DOMAIN="${HOSTNAME}.sandboxwork.my.id" # Set domain here
-# WEBHOOK_URL="https://api.devstech.web.id/webhooks"
-DOMAIN="${HOSTNAME}.alpintripranjadata.my.id" # Set domain here
+DOMAIN="${HOSTNAME}.sandboxwork.my.id" # Set domain here
 WEBHOOK_URL="https://rachel.devstech.web.id/api/v1/compute-webhooks/installation-progress"
+# WEBHOOK_URL="https://api.devstech.web.id/webhooks"
+# DOMAIN="${HOSTNAME}.alpintripranjadata.my.id" # Set domain here
 
 # Helper send progress
 send_progress() {
