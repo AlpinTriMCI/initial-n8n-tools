@@ -3,6 +3,7 @@
 HOSTNAME=$(hostname)
 DOMAIN="${HOSTNAME}.sandboxwork.my.id" # Set domain here
 WEBHOOK_URL="https://rachel.devstech.web.id/api/v1/compute-webhooks/installation-progress"
+PROGRESS=0
 # WEBHOOK_URL="https://api.devstech.web.id/webhooks"
 # DOMAIN="${HOSTNAME}.alpintripranjadata.my.id" # Set domain here
 
@@ -10,22 +11,31 @@ WEBHOOK_URL="https://rachel.devstech.web.id/api/v1/compute-webhooks/installation
 send_progress() {
   local step="$1"
   local status="$2"
+  local progress=$PROGRESS
   local message="${3:-}"
+  local error="${4:-0}"
   local timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
   # send json webhook
   curl -s -X POST "$WEBHOOK_URL" \
     -H "Content-Type: application/json" \
-    -d "{\"hostname\":\"$HOSTNAME\",\"step\":\"$step\",\"status\":\"$status\",\"message\":\"$message\",\"timestamp\":\"$timestamp\"}" >/dev/null 2>&1
+    -d "{\"hostname\":\"$HOSTNAME\",\"step\":\"$step\",\"status\":\"$status\",\"progress\":\"$progress\",\"message\":\"$message\",\"timestamp\":\"$timestamp\"}" >/dev/null 2>&1
 }
 
-trap 'send_progress "setup" "failed" "Error occurred at line $LINENO: $(sed -n ${LINENO}p $0 | sed "s/\"/\\\"/g")"' ERR
+trap '
+  LINE=$LINENO
+  CMD=$(sed -n ${LINENO}p $0 | sed "s/\"/\\\"/g")
+  send_progress "setup" "failed" "Error at line $LINE: $CMD" 1
+  exit 1
+' ERR
 
 set -e
 
-send_progress "setup" "running"
+PROGRESS=10
+send_progress "setup" "running" "Running installation..."
 
-send_progress "install_docker" "running"
+PROGRESS=30
+send_progress "install_docker" "running" "Preparing environment..."
 
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -50,7 +60,8 @@ sudo apt-mark hold docker-ce docker-ce-cli containerd.io docker-buildx-plugin do
 sudo systemctl enable docker
 sudo systemctl start docker
 
-send_progress "install_docker" "success"
+PROGRESS=50
+send_progress "install_docker" "success" "Docker installed."
 
 # Setup compose
 COMPOSE_DIR="/opt/setup"
@@ -87,11 +98,13 @@ CLOUDFLARE_DNS_API_TOKEN=Gen6jIT1U0drAeWto00XbtwVj5hnDsNkMvXGrSko
 EOF
 
 # Run docker compose
-send_progress "build_compose" "running"
+PROGRESS=90
+send_progress "build_compose" "running" "Deploying containers..."
 
 cd "$COMPOSE_DIR"
 sudo docker compose up -d
 
-send_progress "build_compose" "success"
+PROGRESS=100
+send_progress "build_compose" "success" "Installation completed successfully."
 
 send_progress "setup" "done" "Installation complete without errors"
