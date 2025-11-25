@@ -84,7 +84,6 @@ SSL_EMAIL=user@${DOMAIN}
 
 # Cloudflare token
 CLOUDFLARE_DNS_API_TOKEN=Gen6jIT1U0drAeWto00XbtwVj5hnDsNkMvXGrSko
-CLOUDFLARE_EMAIL=alpintripranjadata@gmail.com
 EOF
 
 # Run docker compose

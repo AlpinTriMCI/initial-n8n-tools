@@ -24,8 +24,7 @@ services:
       - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.mytlschallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # disable on production
     environment:
-      - CF_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
-      - CF_EMAIL=${CLOUDFLARE_EMAIL}
+      - CF_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
     ports:
       - "80:80"
       - "443:443"
